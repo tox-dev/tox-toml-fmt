@@ -1,0 +1,8 @@
+- id: tox-toml-fmt
+  name: tox-toml-fmt
+  description: apply a consistent format to `pyproject.toml` files
+  entry: tox-toml-fmt
+  language: python
+  language_version: python3
+  files: '(^|/)tox\.toml$'
+  types: [file, text, toml]
