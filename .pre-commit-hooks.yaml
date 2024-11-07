@@ -3,7 +3,7 @@
     description: ''
     entry: tox-toml-fmt
     language: python
-    'files': (^|/)pyproject\.toml$
+    'files': (^|/)tox\.toml$
     args: []
     require_serial: false
     additional_dependencies: []
