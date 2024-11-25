@@ -1,6 +1,6 @@
 # tox-toml-fmt mirror
 
-[![Mirror](https://github.com/tox-dev/tox-toml-fmt/actions/workflows/main.yml/badge.svg)](https://github.com/tox-dev/tox-toml-fmt/actions/workflows/main.yml)
+[![Mirror](https://github.com/tox-dev/tox-toml-fmt/actions/workflows/main.yaml/badge.svg)](https://github.com/tox-dev/tox-toml-fmt/actions/workflows/main.yaml)
 
 Mirror of [`tox-toml-fmt`](https://github.com/tox-dev/toml-fmt/tree/main/tox-toml-fmt) for
 [pre-commit](https://github.com/pre-commit/pre-commit).
