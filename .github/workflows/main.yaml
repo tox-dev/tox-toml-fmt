@@ -12,20 +12,46 @@ jobs:
     name: Mirror
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - run: git config --global user.name 'Github Actions'
-      - run: git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
-      - name: Install the latest version of uv
+      - name: 🛒 Checkout repository
+        uses: actions/checkout@v6
+      - name: 🔧 Configure git
+        run: |
+          git config --global user.name 'Github Actions'
+          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
+      - name: 📦 Install uv
         uses: astral-sh/setup-uv@v7
         with:
           version: "latest"
           enable-cache: "false"
-      - run: >-
-          uvx -p 3.14 --from pre-commit-mirror-maker pre-commit-mirror . \
-            --language=python --package-name=tox-toml-fmt --files-regex '(^|/)pyproject\.toml$'
-      - run: |
-          git remote set-url origin https://x-access-token:$GH_TOKEN@github.com/$GITHUB_REPOSITORY
-          git push origin HEAD:refs/heads/main --tags -f
-        if: ${{ github.ref == 'refs/heads/main' }}
+      - name: 🪞 Run pre-commit-mirror-maker
+        run: >-
+          uvx -p 3.14 --from pre-commit-mirror-maker pre-commit-mirror . --language=python --package-name=tox-toml-fmt
+          --files-regex '(^|/)tox\.toml$'
+      - name: 📝 Update README with current version
+        run: |
+          VERSION=$(cat .version)
+          sed -i "s/rev: \".*\"/rev: \"v$VERSION\"/" README.md
+      - name: 💅 Format generated files
+        run: uvx prek run --all-files
+      - name: 🔄 Commit fixes and update tag
+        run: |
+          git add -A
+          if ! git diff --cached --quiet; then
+            VERSION=$(cat .version)
+            git commit -m "Format files for v$VERSION"
+            git tag -f "v$VERSION"
+          fi
+      - name: 🚀 Push changes
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git remote set-url origin https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}
+          git push origin HEAD:refs/heads/main
+          git push origin --tags -f
+      - name: 🎉 Create or update GitHub release
+        if: github.ref == 'refs/heads/main'
+        run: |
+          VERSION=$(cat .version)
+          gh release view "v$VERSION" &>/dev/null && gh release delete "v$VERSION" -y || true
+          gh release create "v$VERSION" --generate-notes
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
