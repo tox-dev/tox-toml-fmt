@@ -34,24 +34,23 @@ jobs:
       - name: 💅 Format generated files
         run: uvx prek run --all-files
       - name: 🔄 Commit fixes and update tag
+        id: commit
         run: |
           git add -A
           if ! git diff --cached --quiet; then
             VERSION=$(cat .version)
-            git commit -m "Format files for v$VERSION"
+            git commit -m "Mirror: $VERSION"
             git tag -f "v$VERSION"
+            echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           fi
       - name: 🚀 Push changes
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && steps.commit.outputs.version
         run: |
           git remote set-url origin https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}
           git push origin HEAD:refs/heads/main
           git push origin --tags -f
-      - name: 🎉 Create or update GitHub release
-        if: github.ref == 'refs/heads/main'
-        run: |
-          VERSION=$(cat .version)
-          gh release view "v$VERSION" &>/dev/null && gh release delete "v$VERSION" -y || true
-          gh release create "v$VERSION" --generate-notes
+      - name: 🎉 Create GitHub release
+        if: github.ref == 'refs/heads/main' && steps.commit.outputs.version
+        run: gh release create "v${{ steps.commit.outputs.version }}" --generate-notes
         env:
           GH_TOKEN: ${{ github.token }}
