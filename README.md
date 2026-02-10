@@ -11,7 +11,7 @@ Add it to your `.pre-commit-config.yaml`:
 
 ```yaml
 - repo: https://github.com/tox-dev/tox-toml-fmt
-  rev: "v1.5.2"
+  rev: "v1.5.3"
   hooks:
     - id: tox-toml-fmt
 ```
