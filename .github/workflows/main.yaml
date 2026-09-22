@@ -10,8 +10,9 @@ jobs:
   build:
     name: Mirror
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
       - name: 🛒 Checkout repository
         uses: actions/checkout@v7
       - name: 🔧 Configure git
