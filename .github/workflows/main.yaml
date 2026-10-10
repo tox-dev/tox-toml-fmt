@@ -22,17 +22,18 @@ jobs:
       - name: 📦 Install uv
         uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
         with:
+          python-version: "3.15"
           version: "latest"
           enable-cache: "false"
       - name: 🪞 Run pre-commit-mirror-maker
         run: >-
-          uvx -p 3.14 --from pre-commit-mirror-maker pre-commit-mirror . --language=python --package-name=tox-toml-fmt --files-regex '(^|/)tox\.toml$'
+          uvx -p 3.15 --from pre-commit-mirror-maker pre-commit-mirror . --language=python --package-name=tox-toml-fmt --files-regex '(^|/)tox\.toml$'
       - name: 📝 Update README with current version
         run: |
           VERSION=$(cat .version)
           sed -i "s/rev: \".*\"/rev: \"v$VERSION\"/" README.md
       - name: 💅 Format generated files
-        run: uvx prek run --all-files || true
+        run: uvx --python 3.15 prek run --all-files || true
       - name: 🔄 Commit fixes and update tag
         id: commit
         run: |
