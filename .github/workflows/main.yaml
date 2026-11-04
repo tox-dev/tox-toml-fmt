@@ -51,6 +51,7 @@ jobs:
           git push origin --tags -f
       - name: 🎉 Create GitHub release
         if: github.ref == 'refs/heads/main' && steps.commit.outputs.version
-        run: gh release create "v${{ steps.commit.outputs.version }}" --generate-notes
+        run: gh release create "v${STEPS_COMMIT_OUTPUTS_VERSION}" --generate-notes
         env:
           GH_TOKEN: ${{ github.token }}
+          STEPS_COMMIT_OUTPUTS_VERSION: ${{ steps.commit.outputs.version }}
