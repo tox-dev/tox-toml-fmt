@@ -14,7 +14,7 @@ jobs:
       contents: write
     steps:
       - name: 🛒 Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1 # zizmor: ignore[artipacked]
       - name: 🔧 Configure git
         run: |
           git config --global user.name 'Github Actions'
@@ -47,7 +47,6 @@ jobs:
       - name: 🚀 Push changes
         if: github.ref == 'refs/heads/main' && steps.commit.outputs.version
         run: |
-          git remote set-url origin https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}
           git push origin HEAD:refs/heads/main
           git push origin --tags -f
       - name: 🎉 Create GitHub release
