@@ -6,3 +6,4 @@ workflows:
     '.github/workflows/codeql.yaml': []
     '.github/workflows/main.yaml': []
     '.github/workflows/scorecard.yaml': []
+dependencies: {}
